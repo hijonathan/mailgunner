@@ -1,7 +1,7 @@
 MailGunner
 ==========
 
-MailGunner is a simple utility for quickly sending test HTML emails via MailGun. It let's you do your own (Litmus tests)[http://litmus.com] with local versions of your HTML email.
+MailGunner is a simple utility for quickly sending test HTML emails via MailGun. It let's you do your own [Litmus tests](http://litmus.com) with local versions of your HTML email.
 
 #### Setup
 
