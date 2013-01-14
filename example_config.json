@@ -1,0 +1,6 @@
+{
+    "apikey": "my-api-key",
+    "sender": "me@example.com",
+    "recipients": ["you@example.com"],
+    "subject": "Test email sent via MailGunner"
+}
