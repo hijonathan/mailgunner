@@ -8,7 +8,7 @@ config = require './config.json'
 
 
 # Run this file using the following syntax
-# node mailgunner 'apikey' path_to_test_file.html
+# node mailgunner ['apikey'] path_to_test_file.html
 
 args = process.argv
 switch args.length
