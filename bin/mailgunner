@@ -1,0 +1,4 @@
+#!/bin/bash
+
+REPO=$HOME/Sites/github/mailgunner
+$REPO/node_modules/coffee-script/bin/coffee $REPO/mailgunner.coffee $1

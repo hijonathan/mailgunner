@@ -8,18 +8,19 @@ config = require './config.json'
 
 
 # Run this file using the following syntax
-# node mailgunner ['apikey'] path_to_test_file.html
+# node mailgunner path_to_test_file.html [recipient@gmail.com]
+
+unless config.apikey throw "Set your api key in ./config.json"
 
 args = process.argv
 switch args.length
     when 1, 2
         return console.log('Incorrect number of arguments')
     when 3
-        apikey = config.apikey
         path = args[2]
+        recipients = config.recipients
     when 4
-        apikey = args[2]
-        path = args[3]
+        recipients = args[3]
 
 mg = new mailgun.Mailgun apikey
 if path.charAt(0) isnt '/'
@@ -32,7 +33,7 @@ fs.readFile path, 'utf8', (err, contents) ->
     emailBody = contents
 
     rawBody = "From: #{config.sender}" +
-          "\nTo: #{config.recipients.toString()}" +
+          "\nTo: #{recipients.toString()}" +
           '\nContent-Type: text/html; charset=utf-8' +
           "\nSubject: #{subject}" +
           "\n\n#{emailBody}"
