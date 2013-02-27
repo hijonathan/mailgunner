@@ -1,10 +1,12 @@
 fs = require 'fs'
+request = require 'request'
+home = process.env['HOME']
 
 require.extensions[".json"] = (m) ->
     m.exports = JSON.parse fs.readFileSync m.filename
 
 mailgun = require 'mailgun'
-config = require './config.json'
+config = require "#{home}/.mailgunner/config.json"
 
 
 # Run this file using the following syntax
