@@ -10,7 +10,8 @@ config = require './config.json'
 # Run this file using the following syntax
 # node mailgunner path_to_test_file.html [recipient@gmail.com]
 
-unless config.apikey throw "Set your api key in ./config.json"
+unless config.apikey
+    throw "Set your api key in ./config.json"
 
 args = process.argv
 switch args.length
@@ -22,15 +23,8 @@ switch args.length
     when 4
         recipients = args[3]
 
-mg = new mailgun.Mailgun apikey
-if path.charAt(0) isnt '/'
-    path = process.cwd() + '/' + path
-
-filename = path.split('/').slice(-1)
-subject = "#{config.subject} #{filename}"
-emailBody = ''
-fs.readFile path, 'utf8', (err, contents) ->
-    emailBody = contents
+mg = new mailgun.Mailgun config.apikey
+sendIt = (emailBody, subject) ->
 
     rawBody = "From: #{config.sender}" +
           "\nTo: #{recipients.toString()}" +
@@ -40,7 +34,7 @@ fs.readFile path, 'utf8', (err, contents) ->
 
     mg.sendRaw(
         config.sender,
-        config.recipients,
+        recipients,
         rawBody,
         (err) ->
             if err?
@@ -48,3 +42,26 @@ fs.readFile path, 'utf8', (err, contents) ->
             else
                 "Successfully sent your email"
     )
+
+# Send urls
+if path.substring(0, 4).toLowerCase() is 'http'
+    request path, (err, response, body) ->
+        subject = "#{path} #{config.subject}"
+
+        # Add a <base> tag to get all the assets
+        closingHead = "</head>"
+        baseTag = "<base href='#{path}'>"
+        # I'm not proud of this solution
+        rebasedBody = body.replace closingHead, "#{baseTag}#{closingHead}"
+
+        sendIt rebasedBody, subject
+
+# Send local files
+else
+    if path.charAt(0) isnt '/'
+        path = process.cwd() + '/' + path
+
+    filename = path.split('/').slice(-1)
+    subject = "#{filename} #{config.subject}"
+    fs.readFile path, 'utf8', (err, contents) ->
+        sendIt contents, subject
